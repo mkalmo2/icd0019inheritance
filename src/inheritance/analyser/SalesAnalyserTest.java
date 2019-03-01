@@ -15,7 +15,7 @@ public class SalesAnalyserTest {
     SalesRecord[] records = {
             new SalesRecord("i1", 1, 12),
             new SalesRecord("i2", 2, 24),
-            new SalesRecord("i1", 3, 36),
+            new SalesRecord("i1", 1, 6),
             new SalesRecord("i5", 12, 5),
             new SalesRecord("i5", 12, 5),
             new SalesRecord("i5", 12, 5),
@@ -27,35 +27,35 @@ public class SalesAnalyserTest {
     public void calculatesTotalSalesWithFlatTaxRate() {
         FlatTaxSalesAnalyser analyser = new FlatTaxSalesAnalyser(records);
 
-        assertThat(analyser.getTotalSales(), is(closeTo(380)));
+        assertThat(analyser.getTotalSales(), is(closeTo(295)));
     }
 
     @Test
     public void calculatesTotalSalesByProductIdWithFlatTaxRate() {
         FlatTaxSalesAnalyser analyser = new FlatTaxSalesAnalyser(records);
 
-        assertThat(analyser.getTotalSalesByProductId("i1"), is(closeTo(100)));
+        assertThat(analyser.getTotalSalesByProductId("i1"), is(closeTo(15)));
     }
 
     @Test
     public void calculatesTotalSalesWithTaxFreeRate() {
         TaxFreeSalesAnalyser analyser = new TaxFreeSalesAnalyser(records);
 
-        assertThat(analyser.getTotalSales(), is(closeTo(456)));
+        assertThat(analyser.getTotalSales(), is(closeTo(354)));
     }
 
     @Test
     public void calculatesTotalSalesByProductIdWithTaxFreeRate() {
         TaxFreeSalesAnalyser analyser = new TaxFreeSalesAnalyser(records);
 
-        assertThat(analyser.getTotalSalesByProductId("i1"), is(closeTo(120)));
+        assertThat(analyser.getTotalSalesByProductId("i1"), is(closeTo(18)));
     }
 
     @Test
     public void calculatesTotalSalesWithDifferentiatedTaxRate() {
         DifferentiatedTaxSalesAnalyser analyser = new DifferentiatedTaxSalesAnalyser(records);
 
-        assertThat(analyser.getTotalSales(), is(closeTo(383.6)));
+        assertThat(analyser.getTotalSales(), is(closeTo(298.6)));
     }
 
     @Test
@@ -75,7 +75,7 @@ public class SalesAnalyserTest {
     public void extraFunctionalityWorks() {
         FlatTaxSalesAnalyser analyser = new FlatTaxSalesAnalyser(records);
 
-        assertThat(analyser.getIdOfMostPopularItem(), is("i1"));
+        assertThat(analyser.getIdOfMostPopularItem(), is("i2"));
         assertThat(analyser.getIdOfItemWithLargestTotalSales(), is("i5"));
     }
 
