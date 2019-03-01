@@ -60,8 +60,8 @@ public class SalesAnalyserTest {
 
     @Test
     public void allAnalysersHaveCommonAbstractSuperclass() {
-        Class<?> s1 = FlatTaxSalesAnalyser.class.getSuperclass();
-        Class<?> s2 = FlatTaxSalesAnalyser.class.getSuperclass();
+        Class<?> s1 = DifferentiatedTaxSalesAnalyser.class.getSuperclass();
+        Class<?> s2 = TaxFreeSalesAnalyser.class.getSuperclass();
         Class<?> s3 = FlatTaxSalesAnalyser.class.getSuperclass();
 
         assertThat(s1.getName(), is(s2.getName()));
