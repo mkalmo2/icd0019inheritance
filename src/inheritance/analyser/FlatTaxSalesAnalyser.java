@@ -1,8 +1,10 @@
 package inheritance.analyser;
 
+import java.util.List;
+
 public class FlatTaxSalesAnalyser {
 
-    public FlatTaxSalesAnalyser(SalesRecord[] records) {
+    public FlatTaxSalesAnalyser(List<SalesRecord> records) {
         throw new RuntimeException("not implemented yet");
     }
 

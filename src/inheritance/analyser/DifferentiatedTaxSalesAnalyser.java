@@ -1,8 +1,10 @@
 package inheritance.analyser;
 
+import java.util.List;
+
 public class DifferentiatedTaxSalesAnalyser {
 
-    public DifferentiatedTaxSalesAnalyser(SalesRecord[] records) {
+    public DifferentiatedTaxSalesAnalyser(List<SalesRecord> records) {
         throw new RuntimeException("not implemented yet");
     }
 
