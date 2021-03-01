@@ -14,6 +14,11 @@ public class Runner {
         new Car("123 ABC");
     }
 
+    @Test
+    public void constructBlackBird() {
+        new Bird("black");
+    }
+
 }
 
 

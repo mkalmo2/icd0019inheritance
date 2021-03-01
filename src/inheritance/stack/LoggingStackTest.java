@@ -5,22 +5,25 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class StackTest {
+public class LoggingStackTest {
 
     @Test
-    public void extendedStackLogsMethodCalls() {
-        ExtendedStack stack = new ExtendedStack();
+    public void loggingStackLogsMethodCalls() {
+        LoggingStack stack = new LoggingStack();
 
         stack.push(1);
         stack.push(2);
 
-        stack.pop();
+        assertThat(stack.size(), is(2));
+        assertThat(stack.pop(), is(2));
+        assertThat(stack.pop(), is(1));
+        assertThat(stack.size(), is(0));
     }
 
 
     @Test
     public void canAddMultipleElementsAtOnce() {
-        ExtendedStack stack = new ExtendedStack();
+        LoggingStack stack = new LoggingStack();
 
         // stack.pushAll(1, 2, 3);
 
