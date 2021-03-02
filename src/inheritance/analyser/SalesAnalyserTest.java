@@ -10,6 +10,7 @@ import java.lang.reflect.Modifier;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -89,9 +90,12 @@ public class SalesAnalyserTest {
 
     @Test
     public void specificAnalysersHaveOnlyMinimalCode() {
-        assertThat(FlatTaxSalesAnalyser.class.getDeclaredMethods().length, is(2));
-        assertThat(TaxFreeSalesAnalyser.class.getDeclaredMethods().length, is(2));
-        assertThat(DifferentiatedTaxSalesAnalyser.class.getDeclaredMethods().length, is(2));
+        assertThat(FlatTaxSalesAnalyser.class.getDeclaredMethods().length,
+                lessThanOrEqualTo(2));
+        assertThat(TaxFreeSalesAnalyser.class.getDeclaredMethods().length,
+                lessThanOrEqualTo(2));
+        assertThat(DifferentiatedTaxSalesAnalyser.class.getDeclaredMethods().length,
+                lessThanOrEqualTo(2));
     }
 
     @Test
