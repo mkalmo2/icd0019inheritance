@@ -1,9 +1,11 @@
 package inheritance.analyser;
 
+import junit.framework.AssertionFailedError;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.List;
 
@@ -83,6 +85,29 @@ public class SalesAnalyserTest {
 
         assertTrue("Superclass should be abstract",
                 Modifier.isAbstract(s1.getModifiers()));
+    }
+
+    @Test
+    public void specificAnalysersHaveOnlyMinimalCode() {
+        assertThat(FlatTaxSalesAnalyser.class.getDeclaredMethods().length, is(2));
+        assertThat(TaxFreeSalesAnalyser.class.getDeclaredMethods().length, is(2));
+        assertThat(DifferentiatedTaxSalesAnalyser.class.getDeclaredMethods().length, is(2));
+    }
+
+    @Test
+    public void specificAnalysersHaveOnlyProtectedMethods() {
+        assertContainsOnlyProtectedMethods(FlatTaxSalesAnalyser.class);
+        assertContainsOnlyProtectedMethods(TaxFreeSalesAnalyser.class);
+        assertContainsOnlyProtectedMethods(DifferentiatedTaxSalesAnalyser.class);
+    }
+
+    private void assertContainsOnlyProtectedMethods(Class<?> clazz) {
+        for (Method method : clazz.getDeclaredMethods()) {
+            if (!Modifier.isProtected(method.getModifiers())) {
+                throw new AssertionFailedError(String.format(
+                        "Class %s contains non protected methods", clazz.getName()));
+            }
+        }
     }
 
     private Matcher<Double> closeTo(double value) {
