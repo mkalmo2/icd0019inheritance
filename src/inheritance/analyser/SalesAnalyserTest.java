@@ -89,6 +89,12 @@ public class SalesAnalyserTest {
     }
 
     @Test
+    public void commonSuperclassIsSealed() {
+        assertTrue("Superclass should be sealed",
+                FlatTaxSalesAnalyser.class.getSuperclass().isSealed());
+    }
+
+    @Test
     public void specificAnalysersHaveOnlyMinimalCode() {
         assertThat(FlatTaxSalesAnalyser.class.getDeclaredMethods().length,
                 lessThanOrEqualTo(2));
