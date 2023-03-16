@@ -5,11 +5,15 @@ import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -109,6 +113,26 @@ public class SalesAnalyserTest {
         assertContainsOnlyProtectedMethods(FlatTaxSalesAnalyser.class);
         assertContainsOnlyProtectedMethods(TaxFreeSalesAnalyser.class);
         assertContainsOnlyProtectedMethods(DifferentiatedTaxSalesAnalyser.class);
+    }
+
+    @Test
+    public void concreteClassesContainMinimalCode() {
+        assertThat(getCodeSize(FlatTaxSalesAnalyser.class.getSimpleName()), lessThan(40));
+        assertThat(getCodeSize(TaxFreeSalesAnalyser.class.getSimpleName()), lessThan(40));
+        assertThat(getCodeSize(DifferentiatedTaxSalesAnalyser.class.getSimpleName()), lessThan(40));
+    }
+
+    private int getCodeSize(String className) {
+        String filePath = String.format("src/inheritance/analyser/%s.java", className);
+
+        String contents;
+        try {
+            contents = Files.readString(Paths.get(filePath));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return contents.replaceAll("\\s", "").split("\\W+").length;
     }
 
     private void assertContainsOnlyProtectedMethods(Class<?> clazz) {
