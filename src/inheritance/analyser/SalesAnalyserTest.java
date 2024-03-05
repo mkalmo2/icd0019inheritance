@@ -13,9 +13,8 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.lessThan;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertTrue;
 
 public class SalesAnalyserTest {
@@ -66,10 +65,10 @@ public class SalesAnalyserTest {
     }
 
     @Test
-    public void findsMostPopularSalesItem() {
+    public void findsTop3MostPopularSalesItems() {
         FlatTaxSalesAnalyser analyser = new FlatTaxSalesAnalyser(records);
 
-        assertThat(analyser.getIdOfMostPopularItem(), is("i2"));
+        assertThat(analyser.getTop3PopularItems(), contains("i2", "i5", "i1"));
     }
 
     @Test
@@ -117,9 +116,9 @@ public class SalesAnalyserTest {
 
     @Test
     public void concreteClassesContainMinimalCode() {
-        assertThat(getCodeSize(FlatTaxSalesAnalyser.class.getSimpleName()), lessThan(40));
-        assertThat(getCodeSize(TaxFreeSalesAnalyser.class.getSimpleName()), lessThan(40));
-        assertThat(getCodeSize(DifferentiatedTaxSalesAnalyser.class.getSimpleName()), lessThan(40));
+        assertThat(getCodeSize(FlatTaxSalesAnalyser.class.getSimpleName()), lessThan(30));
+        assertThat(getCodeSize(TaxFreeSalesAnalyser.class.getSimpleName()), lessThan(30));
+        assertThat(getCodeSize(DifferentiatedTaxSalesAnalyser.class.getSimpleName()), lessThan(30));
     }
 
     private int getCodeSize(String className) {

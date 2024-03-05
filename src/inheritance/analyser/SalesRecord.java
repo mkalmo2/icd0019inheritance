@@ -2,9 +2,9 @@ package inheritance.analyser;
 
 public class SalesRecord {
 
-    private String productId;
-    private Integer productPrice;
-    private Integer itemsSold;
+    private final String productId;
+    private final Integer productPrice;
+    private final Integer itemsSold;
     private boolean hasReducedRate = false;
 
     public SalesRecord(String productId, Integer productPrice, Integer itemsSold) {

@@ -16,7 +16,7 @@ public class FlatTaxSalesAnalyser {
         throw new RuntimeException("not implemented yet");
     }
 
-    public String getIdOfMostPopularItem() {
+    public List<String> getTop3PopularItems() {
         throw new RuntimeException("not implemented yet");
     }
 
