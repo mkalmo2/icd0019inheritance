@@ -1,9 +1,6 @@
 package inheritance.analyser;
 
-import junit.framework.AssertionFailedError;
-import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -12,10 +9,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 
 public class SalesAnalyserTest {
 
@@ -33,49 +28,49 @@ public class SalesAnalyserTest {
     public void calculatesTotalSalesWithFlatTaxRate() {
         FlatTaxSalesAnalyser analyser = new FlatTaxSalesAnalyser(records);
 
-        assertThat(analyser.getTotalSales(), is(closeTo(295)));
+        assertThat(analyser.getTotalSales()).isCloseTo(295, within(0.1));
     }
 
     @Test
     public void calculatesTotalSalesByProductIdWithFlatTaxRate() {
         FlatTaxSalesAnalyser analyser = new FlatTaxSalesAnalyser(records);
 
-        assertThat(analyser.getTotalSalesByProductId("i1"), is(closeTo(15)));
+        assertThat(analyser.getTotalSalesByProductId("i1")).isCloseTo(15, within(0.1));
     }
 
     @Test
     public void calculatesTotalSalesWithTaxFreeRate() {
         TaxFreeSalesAnalyser analyser = new TaxFreeSalesAnalyser(records);
 
-        assertThat(analyser.getTotalSales(), is(closeTo(354)));
+        assertThat(analyser.getTotalSales()).isCloseTo(354, within(0.1));
     }
 
     @Test
     public void calculatesTotalSalesByProductIdWithTaxFreeRate() {
         TaxFreeSalesAnalyser analyser = new TaxFreeSalesAnalyser(records);
 
-        assertThat(analyser.getTotalSalesByProductId("i1"), is(closeTo(18)));
+        assertThat(analyser.getTotalSalesByProductId("i1")).isCloseTo(18, within(0.1));
     }
 
     @Test
     public void calculatesTotalSalesWithDifferentiatedTaxRate() {
         DifferentiatedTaxSalesAnalyser analyser = new DifferentiatedTaxSalesAnalyser(records);
 
-        assertThat(analyser.getTotalSales(), is(closeTo(298.6)));
+        assertThat(analyser.getTotalSales()).isCloseTo(298.6, within(0.1));
     }
 
     @Test
     public void findsTop3MostPopularSalesItems() {
         FlatTaxSalesAnalyser analyser = new FlatTaxSalesAnalyser(records);
 
-        assertThat(analyser.getTop3PopularItems(), contains("i2", "i5", "i1"));
+        assertThat(analyser.getTop3PopularItems()).containsExactly("i2", "i5", "i1");
     }
 
     @Test
     public void findsTheItemWithTheLargestTotalSales() {
         FlatTaxSalesAnalyser analyser = new FlatTaxSalesAnalyser(records);
 
-        assertThat(analyser.getIdOfItemWithLargestTotalSales(), is("i5"));
+        assertThat(analyser.getIdOfItemWithLargestTotalSales()).isEqualTo("i5");
     }
 
     @Test
@@ -84,27 +79,29 @@ public class SalesAnalyserTest {
         Class<?> s2 = TaxFreeSalesAnalyser.class.getSuperclass();
         Class<?> s3 = DifferentiatedTaxSalesAnalyser.class.getSuperclass();
 
-        assertThat(s1.getName(), is(s2.getName()));
-        assertThat(s1.getName(), is(s3.getName()));
+        assertThat(s1.getName()).isEqualTo(s2.getName());
+        assertThat(s1.getName()).isEqualTo(s3.getName());
 
-        assertTrue("Superclass should be abstract",
-                Modifier.isAbstract(s1.getModifiers()));
+        assertThat(Modifier.isAbstract(s1.getModifiers()))
+            .as("Superclass should be abstract")
+            .isTrue();
     }
 
     @Test
     public void commonSuperclassIsSealed() {
-        assertTrue("Superclass should be sealed",
-                FlatTaxSalesAnalyser.class.getSuperclass().isSealed());
+        assertThat(FlatTaxSalesAnalyser.class.getSuperclass().isSealed())
+            .as("Superclass should be sealed")
+            .isTrue();
     }
 
     @Test
     public void specificAnalysersHaveOnlyMinimalCode() {
-        assertThat(FlatTaxSalesAnalyser.class.getDeclaredMethods().length,
-                lessThanOrEqualTo(2));
-        assertThat(TaxFreeSalesAnalyser.class.getDeclaredMethods().length,
-                lessThanOrEqualTo(2));
-        assertThat(DifferentiatedTaxSalesAnalyser.class.getDeclaredMethods().length,
-                lessThanOrEqualTo(2));
+        assertThat(FlatTaxSalesAnalyser.class.getDeclaredMethods().length)
+                .isLessThanOrEqualTo(2);
+        assertThat(TaxFreeSalesAnalyser.class.getDeclaredMethods().length)
+                .isLessThanOrEqualTo(2);
+        assertThat(DifferentiatedTaxSalesAnalyser.class.getDeclaredMethods().length)
+                .isLessThanOrEqualTo(2);
     }
 
     @Test
@@ -116,9 +113,9 @@ public class SalesAnalyserTest {
 
     @Test
     public void concreteClassesContainMinimalCode() {
-        assertThat(getCodeSize(FlatTaxSalesAnalyser.class.getSimpleName()), lessThan(30));
-        assertThat(getCodeSize(TaxFreeSalesAnalyser.class.getSimpleName()), lessThan(30));
-        assertThat(getCodeSize(DifferentiatedTaxSalesAnalyser.class.getSimpleName()), lessThan(30));
+        assertThat(getCodeSize(FlatTaxSalesAnalyser.class.getSimpleName())).isLessThan(30);
+        assertThat(getCodeSize(TaxFreeSalesAnalyser.class.getSimpleName())).isLessThan(30);
+        assertThat(getCodeSize(DifferentiatedTaxSalesAnalyser.class.getSimpleName())).isLessThan(30);
     }
 
     private int getCodeSize(String className) {
@@ -136,16 +133,9 @@ public class SalesAnalyserTest {
 
     private void assertContainsOnlyProtectedMethods(Class<?> clazz) {
         for (Method method : clazz.getDeclaredMethods()) {
-            if (!Modifier.isProtected(method.getModifiers())) {
-                throw new AssertionFailedError(String.format(
-                        "Class %s contains non protected methods", clazz.getName()));
-            }
+            assertThat(Modifier.isProtected(method.getModifiers()))
+                .as("Class %s contains non protected methods", clazz.getName())
+                .isTrue();
         }
-    }
-
-    private Matcher<Double> closeTo(double value) {
-        double precision = 0.1;
-
-        return Matchers.closeTo(value, precision);
     }
 }

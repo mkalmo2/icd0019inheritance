@@ -1,6 +1,6 @@
 package inheritance.pager;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -9,9 +9,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class FilteringPagerTests {
 
@@ -22,12 +21,12 @@ public class FilteringPagerTests {
 
         SimplePager simplePager = new SimplePager(data, 3);
 
-        assertThat(simplePager.getPage(0), contains(1, null, null));
-        assertThat(simplePager.getPage(1), contains(2, null, 3));
-        assertThat(simplePager.getPage(2), contains(4));
+        assertThat(simplePager.getPage(0)).containsExactly(1, null, null);
+        assertThat(simplePager.getPage(1)).containsExactly(2, null, 3);
+        assertThat(simplePager.getPage(2)).containsExactly(4);
 
-        assertThat(simplePager.hasPage(-1), is(false));
-        assertThat(simplePager.hasPage(3), is(false));
+        assertThat(simplePager.hasPage(-1)).isFalse();
+        assertThat(simplePager.hasPage(3)).isFalse();
     }
 
     @Test
@@ -39,38 +38,41 @@ public class FilteringPagerTests {
         SimplePager simplePager = new SimplePager(data, 4);
         FilteringPager pager = new FilteringPager(simplePager, 2);
 
-        assertThat(pager.getNextPage(), contains(1, 2));
-        assertThat(pager.getCurrentPage(), contains(1, 2));
+        assertThat(pager.getNextPage()).containsExactly(1, 2);
+        assertThat(pager.getCurrentPage()).containsExactly(1, 2);
 
-        assertThat(pager.getNextPage(), contains(3, 4));
-        assertThat(pager.getCurrentPage(), contains(3, 4));
+        assertThat(pager.getNextPage()).containsExactly(3, 4);
+        assertThat(pager.getCurrentPage()).containsExactly(3, 4);
 
-        assertThat(pager.getPreviousPage(), contains(1, 2));
-        assertThat(pager.getCurrentPage(), contains(1, 2));
+        assertThat(pager.getPreviousPage()).containsExactly(1, 2);
+        assertThat(pager.getCurrentPage()).containsExactly(1, 2);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void throwsWhenNoNextPage() {
         SimplePager simplePager = new SimplePager(List.of(), 4);
         FilteringPager pager = new FilteringPager(simplePager, 2);
 
-        pager.getNextPage();
+        assertThatThrownBy(() -> pager.getNextPage())
+            .isInstanceOf(IllegalStateException.class);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void throwsWhenNoCurrentPage() {
         SimplePager simplePager = new SimplePager(List.of(), 4);
         FilteringPager pager = new FilteringPager(simplePager, 2);
 
-        pager.getCurrentPage();
+        assertThatThrownBy(() -> pager.getCurrentPage())
+            .isInstanceOf(IllegalStateException.class);
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void throwsWhenNoPreviousPage() {
         SimplePager simplePager = new SimplePager(List.of(), 4);
         FilteringPager pager = new FilteringPager(simplePager, 2);
 
-        pager.getPreviousPage();
+        assertThatThrownBy(() -> pager.getPreviousPage())
+            .isInstanceOf(IllegalStateException.class);
     }
 
     @Test
@@ -80,13 +82,13 @@ public class FilteringPagerTests {
         FilteringPager pager = new FilteringPager(simplePager, 3);
 
         while (memoryPager.hasNext()) {
-            assertThat(pager.getNextPage(), is(memoryPager.getNextPage()));
-            assertThat(pager.getCurrentPage(), is(memoryPager.getCurrentPage()));
+            assertThat(pager.getNextPage()).isEqualTo(memoryPager.getNextPage());
+            assertThat(pager.getCurrentPage()).isEqualTo(memoryPager.getCurrentPage());
         }
 
         while (memoryPager.hasPrevious()) {
-            assertThat(pager.getPreviousPage(), is(memoryPager.getPreviousPage()));
-            assertThat(pager.getCurrentPage(), is(memoryPager.getCurrentPage()));
+            assertThat(pager.getPreviousPage()).isEqualTo(memoryPager.getPreviousPage());
+            assertThat(pager.getCurrentPage()).isEqualTo(memoryPager.getCurrentPage());
         }
     }
 
@@ -104,7 +106,7 @@ public class FilteringPagerTests {
             pager.getPreviousPage();
         }
 
-        assertThat(simplePager.getPageRequestCount(), is(lessThan(100)));
+        assertThat(simplePager.getPageRequestCount()).isLessThan(100);
     }
 
     @Test
@@ -115,7 +117,7 @@ public class FilteringPagerTests {
                 .filter(field -> !field.getType().equals(Integer.class))
                 .collect(Collectors.toList());
 
-        assertThat(fieldsNotAllowed, is(empty()));
+        assertThat(fieldsNotAllowed).isEmpty();
     }
 
     private List<Integer> getSampleInput() {

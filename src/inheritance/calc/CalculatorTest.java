@@ -1,33 +1,24 @@
 package inheritance.calc;
 
-import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.within;
 
 public class CalculatorTest {
 
     @Test
-    public void calculatesWeeklyPayAfterIncomeTax() {
+    public void ex1() {
         PayCalculator calc = new PayCalculator();
 
-        assertThat(calc.getWeeklyPayAfterTaxes(40), is(closeTo(480)));
+        assertThat(calc.getWeeklyPayAfterTaxes(40)).isCloseTo(480, within(0.1));
     }
 
     @Test
-    public void calculatesWeeklyPayWithInTaxFreeZone() {
+    public void ex2() {
         TaxFreePayCalculator calc = new TaxFreePayCalculator();
 
-        assertThat(calc.getWeeklyPayAfterTaxes(40), is(closeTo(600)));
-    }
-
-
-    private Matcher<Double> closeTo(double value) {
-        double precision = 0.1;
-
-        return Matchers.closeTo(value, precision);
+        assertThat(calc.getWeeklyPayAfterTaxes(40)).isCloseTo(600, within(0.1));
     }
 
 }

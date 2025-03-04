@@ -1,9 +1,8 @@
 package inheritance.stack;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LoggingStackTest {
 
@@ -14,10 +13,10 @@ public class LoggingStackTest {
         stack.push(1);
         stack.push(2);
 
-        assertThat(stack.size(), is(2));
-        assertThat(stack.pop(), is(2));
-        assertThat(stack.pop(), is(1));
-        assertThat(stack.size(), is(0));
+        assertThat(stack.size()).isEqualTo(2);
+        assertThat(stack.pop()).isEqualTo(2);
+        assertThat(stack.pop()).isEqualTo(1);
+        assertThat(stack.size()).isEqualTo(0);
     }
 
 
@@ -27,9 +26,9 @@ public class LoggingStackTest {
 
         // stack.pushAll(1, 2, 3);
 
-        assertThat(stack.size(), is(3));
-        assertThat(stack.pop(), is(3));
-        assertThat(stack.pop(), is(2));
+        assertThat(stack.size()).isEqualTo(3);
+        assertThat(stack.pop()).isEqualTo(3);
+        assertThat(stack.pop()).isEqualTo(2);
     }
 
 
