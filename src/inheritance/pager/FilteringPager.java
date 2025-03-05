@@ -14,15 +14,23 @@ public class FilteringPager {
         this.pageSize = pageSize;
     }
 
-    public List<Integer> getNextPage() {
+    public List<String> getNextPage() {
         throw new RuntimeException("not implemented yet");
     }
 
-    public List<Integer> getCurrentPage() {
+    public List<String> getCurrentPage() {
         throw new RuntimeException("not implemented yet");
     }
 
-    public List<Integer> getPreviousPage() {
+    public List<String> getPreviousPage() {
+        throw new RuntimeException("not implemented yet");
+    }
+
+    public boolean hasNextPage() {
+        throw new RuntimeException("not implemented yet");
+    }
+
+    public boolean hasPreviousPage() {
         throw new RuntimeException("not implemented yet");
     }
 

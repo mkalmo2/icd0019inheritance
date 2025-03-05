@@ -6,12 +6,12 @@ public class SimplePagerWithCounter extends SimplePager {
 
     private int pageRequestCount = 0;
 
-    public SimplePagerWithCounter(List<Integer> data, int pageSize) {
+    public SimplePagerWithCounter(List<String> data, int pageSize) {
         super(data, pageSize);
     }
 
     @Override
-    public List<Integer> getPage(int pageNumber) {
+    public List<String> getPage(int pageNumber) {
         pageRequestCount++;
         return super.getPage(pageNumber);
     }

@@ -16,14 +16,14 @@ public class FilteringPagerTests {
 
     @Test
     public void simplePagerPresentsDataInPages() {
-        List<Integer> data = Arrays.asList(
-                1, null, null, 2, null, 3, 4);
+        List<String> data = Arrays.asList(
+                "1", null, null, "2", null, "3", "4");
 
         SimplePager simplePager = new SimplePager(data, 3);
 
-        assertThat(simplePager.getPage(0)).containsExactly(1, null, null);
-        assertThat(simplePager.getPage(1)).containsExactly(2, null, 3);
-        assertThat(simplePager.getPage(2)).containsExactly(4);
+        assertThat(simplePager.getPage(0)).containsExactly("1", null, null);
+        assertThat(simplePager.getPage(1)).containsExactly("2", null, "3");
+        assertThat(simplePager.getPage(2)).containsExactly("4");
 
         assertThat(simplePager.hasPage(-1)).isFalse();
         assertThat(simplePager.hasPage(3)).isFalse();
@@ -31,21 +31,55 @@ public class FilteringPagerTests {
 
     @Test
     public void filteringPagerPresentsFilteredDataInPages() {
-        List<Integer> data = Arrays.asList(
-                1, null, null, 2,
-                null, 3, 4);
+        List<String> data = Arrays.asList(
+                "1", null, null, "2",
+                null, "3", "4");
 
         SimplePager simplePager = new SimplePager(data, 4);
         FilteringPager pager = new FilteringPager(simplePager, 2);
 
-        assertThat(pager.getNextPage()).containsExactly(1, 2);
-        assertThat(pager.getCurrentPage()).containsExactly(1, 2);
+        assertThat(pager.getNextPage()).containsExactly("1", "2");
+        assertThat(pager.getCurrentPage()).containsExactly("1", "2");
 
-        assertThat(pager.getNextPage()).containsExactly(3, 4);
-        assertThat(pager.getCurrentPage()).containsExactly(3, 4);
+        assertThat(pager.getNextPage()).containsExactly("3", "4");
+        assertThat(pager.getCurrentPage()).containsExactly("3", "4");
 
-        assertThat(pager.getPreviousPage()).containsExactly(1, 2);
-        assertThat(pager.getCurrentPage()).containsExactly(1, 2);
+        assertThat(pager.getPreviousPage()).containsExactly("1", "2");
+        assertThat(pager.getCurrentPage()).containsExactly("1", "2");
+    }
+
+    @Test
+    public void knowsWhetherThereIsNextPage() {
+        List<String> data = Arrays.asList(
+                "1", null, null, "2",
+                null, "3");
+
+        SimplePager simplePager = new SimplePager(data, 4);
+        FilteringPager pager = new FilteringPager(simplePager, 2);
+
+        assertThat(pager.hasNextPage()).isTrue();
+        pager.getNextPage();
+        assertThat(pager.hasNextPage()).isTrue();
+        pager.getNextPage();
+        assertThat(pager.hasNextPage()).isFalse();
+    }
+
+    @Test
+    public void knowsWhetherThereIsPreviousPage() {
+        List<String> data = Arrays.asList(
+                "1", null, null, "2",
+                null, "3");
+
+        SimplePager simplePager = new SimplePager(data, 4);
+        FilteringPager pager = new FilteringPager(simplePager, 2);
+
+        assertThat(pager.hasPreviousPage()).isFalse();
+        pager.getNextPage(); // on firs page
+        assertThat(pager.hasPreviousPage()).isFalse();
+        pager.getNextPage();
+        assertThat(pager.hasPreviousPage()).isTrue();
+        pager.getPreviousPage();
+        assertThat(pager.hasPreviousPage()).isFalse();
     }
 
     @Test
@@ -120,15 +154,15 @@ public class FilteringPagerTests {
         assertThat(fieldsNotAllowed).isEmpty();
     }
 
-    private List<Integer> getSampleInput() {
-        List<Integer> integers = new ArrayList<>();
+    private List<String> getSampleInput() {
+        List<String> strings = new ArrayList<>();
         Random random = new Random(0);
         for (int i = 0; i < 100; i++) {
             int randNum = random.nextInt(30);
-            integers.add(randNum < 10 ? randNum : null);
+            strings.add(randNum < 10 ? String.valueOf(randNum) : null);
         }
 
-        return integers;
+        return strings;
     }
 
 }

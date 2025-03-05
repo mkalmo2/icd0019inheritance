@@ -8,12 +8,12 @@ public class FilteringPagerWithMemory {
     private final int pageSize;
 
     private int pageNumber = -1;
-    public List<Integer> storage = new ArrayList<>();
+    public List<String> storage = new ArrayList<>();
 
     public FilteringPagerWithMemory(SimplePager dataSource, int pageSize) {
         this.pageSize = pageSize;
         for (int i = 0; dataSource.hasPage(i); i++) {
-            for (Integer element : dataSource.getPage(i)) {
+            for (String element : dataSource.getPage(i)) {
                 if (element != null) {
                     storage.add(element);
                 }
@@ -31,7 +31,7 @@ public class FilteringPagerWithMemory {
         return pageNumber > 0;
     }
 
-    public List<Integer> getNextPage() {
+    public List<String> getNextPage() {
         if (hasNext()) {
             pageNumber++;
         } else {
@@ -41,7 +41,7 @@ public class FilteringPagerWithMemory {
         return getPageCommon();
     }
 
-    public List<Integer> getCurrentPage() {
+    public List<String> getCurrentPage() {
         if (pageNumber < 0) {
             throw new IllegalStateException("there is no current page");
         }
@@ -49,7 +49,7 @@ public class FilteringPagerWithMemory {
         return getPageCommon();
     }
 
-    public List<Integer> getPreviousPage() {
+    public List<String> getPreviousPage() {
         if (pageNumber <= 0) {
             throw new IllegalStateException("there is no previous page");
         } else {
@@ -64,7 +64,7 @@ public class FilteringPagerWithMemory {
         return String.format("page: %s", pageNumber);
     }
 
-    private List<Integer> getPageCommon() {
+    private List<String> getPageCommon() {
         int startPos = pageNumber * pageSize;
         int endPos = Math.min(startPos + pageSize, storage.size());
 

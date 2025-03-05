@@ -4,10 +4,10 @@ import java.util.List;
 
 public class SimplePager {
 
-    private final List<Integer> data;
+    private final List<String> data;
     private final int pageSize;
 
-    public SimplePager(List<Integer> data, int pageSize) {
+    public SimplePager(List<String> data, int pageSize) {
         this.data = data;
         this.pageSize = pageSize;
     }
@@ -22,7 +22,7 @@ public class SimplePager {
         return startPos < data.size();
     }
 
-    public List<Integer> getPage(int pageNumber) {
+    public List<String> getPage(int pageNumber) {
         if (!hasPage(pageNumber)) {
             throw new IllegalArgumentException("no such page: " + pageNumber);
         }
