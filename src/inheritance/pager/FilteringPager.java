@@ -34,4 +34,7 @@ public class FilteringPager {
         throw new RuntimeException("not implemented yet");
     }
 
+    public int getCurrentPageNo() {
+        throw new RuntimeException("not implemented yet");
+    }
 }

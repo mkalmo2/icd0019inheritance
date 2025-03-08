@@ -7,7 +7,7 @@ public class FilteringPagerWithMemory {
 
     private final int pageSize;
 
-    private int pageNumber = -1;
+    private int pageNumber = 0;
     public List<String> storage = new ArrayList<>();
 
     public FilteringPagerWithMemory(SimplePager dataSource, int pageSize) {
@@ -21,22 +21,22 @@ public class FilteringPagerWithMemory {
         }
     }
 
-    public boolean hasNext() {
+    public boolean hasNextPage() {
         int pageStart = (pageNumber + 1) * pageSize;
 
         return pageStart < storage.size();
     }
 
-    public boolean hasPrevious() {
+    public boolean hasPreviousPage() {
         return pageNumber > 0;
     }
 
     public List<String> getNextPage() {
-        if (hasNext()) {
-            pageNumber++;
-        } else {
+        if (!hasNextPage()) {
             throw new IllegalStateException("there is no next page");
         }
+
+        pageNumber++;
 
         return getPageCommon();
     }

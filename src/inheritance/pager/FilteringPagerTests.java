@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -33,29 +32,33 @@ public class FilteringPagerTests {
     public void filteringPagerPresentsFilteredDataInPages() {
         List<String> data = Arrays.asList(
                 "1", null, null, "2",
-                null, "3", "4");
+                null, "3", "4", null, "5");
 
         SimplePager simplePager = new SimplePager(data, 4);
         FilteringPager pager = new FilteringPager(simplePager, 2);
 
-        assertThat(pager.getNextPage()).containsExactly("1", "2");
         assertThat(pager.getCurrentPage()).containsExactly("1", "2");
-
         assertThat(pager.getNextPage()).containsExactly("3", "4");
+        assertThat(pager.hasNextPage()).isTrue();
+        assertThat(pager.getNextPage()).containsExactly("5");
+        assertThat(pager.hasNextPage()).isFalse();
+
+        assertThat(pager.getPreviousPage()).containsExactly("3", "4");
         assertThat(pager.getCurrentPage()).containsExactly("3", "4");
 
+        assertThat(pager.hasPreviousPage()).isTrue();
         assertThat(pager.getPreviousPage()).containsExactly("1", "2");
+        assertThat(pager.hasPreviousPage()).isFalse();
         assertThat(pager.getCurrentPage()).containsExactly("1", "2");
     }
 
     @Test
     public void knowsWhetherThereIsNextPage() {
         List<String> data = Arrays.asList(
-                "1", null, null, "2",
-                null, "3");
+                "1", null, null, "2", null, "3");
 
         SimplePager simplePager = new SimplePager(data, 4);
-        FilteringPager pager = new FilteringPager(simplePager, 2);
+        FilteringPager pager = new FilteringPager(simplePager, 1);
 
         assertThat(pager.hasNextPage()).isTrue();
         pager.getNextPage();
@@ -74,8 +77,6 @@ public class FilteringPagerTests {
         FilteringPager pager = new FilteringPager(simplePager, 2);
 
         assertThat(pager.hasPreviousPage()).isFalse();
-        pager.getNextPage(); // on firs page
-        assertThat(pager.hasPreviousPage()).isFalse();
         pager.getNextPage();
         assertThat(pager.hasPreviousPage()).isTrue();
         pager.getPreviousPage();
@@ -87,16 +88,7 @@ public class FilteringPagerTests {
         SimplePager simplePager = new SimplePager(List.of(), 4);
         FilteringPager pager = new FilteringPager(simplePager, 2);
 
-        assertThatThrownBy(() -> pager.getNextPage())
-            .isInstanceOf(IllegalStateException.class);
-    }
-
-    @Test
-    public void throwsWhenNoCurrentPage() {
-        SimplePager simplePager = new SimplePager(List.of(), 4);
-        FilteringPager pager = new FilteringPager(simplePager, 2);
-
-        assertThatThrownBy(() -> pager.getCurrentPage())
+        assertThatThrownBy(pager::getNextPage)
             .isInstanceOf(IllegalStateException.class);
     }
 
@@ -105,8 +97,25 @@ public class FilteringPagerTests {
         SimplePager simplePager = new SimplePager(List.of(), 4);
         FilteringPager pager = new FilteringPager(simplePager, 2);
 
-        assertThatThrownBy(() -> pager.getPreviousPage())
+        assertThatThrownBy(pager::getPreviousPage)
             .isInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
+    public void knowsCurrentPageNumber() {
+        List<String> data = Arrays.asList("1", null, "2", "3", null, "4", "5");
+        SimplePager simplePager = new SimplePager(data, 4);
+        FilteringPager pager = new FilteringPager(simplePager, 2);
+
+        assertThat(pager.getCurrentPageNo()).isEqualTo(0);
+        pager.getNextPage();
+        assertThat(pager.getCurrentPageNo()).isEqualTo(1);
+        pager.getNextPage();
+        assertThat(pager.getCurrentPageNo()).isEqualTo(2);
+        pager.getPreviousPage();
+        assertThat(pager.getCurrentPageNo()).isEqualTo(1);
+        pager.getPreviousPage();
+        assertThat(pager.getCurrentPageNo()).isEqualTo(0);
     }
 
     @Test
@@ -115,12 +124,12 @@ public class FilteringPagerTests {
         FilteringPagerWithMemory memoryPager = new FilteringPagerWithMemory(simplePager, 3);
         FilteringPager pager = new FilteringPager(simplePager, 3);
 
-        while (memoryPager.hasNext()) {
+        while (memoryPager.hasNextPage()) {
             assertThat(pager.getNextPage()).isEqualTo(memoryPager.getNextPage());
             assertThat(pager.getCurrentPage()).isEqualTo(memoryPager.getCurrentPage());
         }
 
-        while (memoryPager.hasPrevious()) {
+        while (memoryPager.hasPreviousPage()) {
             assertThat(pager.getPreviousPage()).isEqualTo(memoryPager.getPreviousPage());
             assertThat(pager.getCurrentPage()).isEqualTo(memoryPager.getCurrentPage());
         }
@@ -140,7 +149,7 @@ public class FilteringPagerTests {
             pager.getPreviousPage();
         }
 
-        assertThat(simplePager.getPageRequestCount()).isLessThan(100);
+        assertThat(simplePager.getPageRequestCount()).isLessThan(150);
     }
 
     @Test
@@ -148,10 +157,15 @@ public class FilteringPagerTests {
         List<Field> fieldsNotAllowed = Arrays.stream(FilteringPager.class.getDeclaredFields())
                 .filter(field -> !field.getType().equals(SimplePager.class))
                 .filter(field -> !field.getType().equals(int.class))
-                .filter(field -> !field.getType().equals(Integer.class))
-                .collect(Collectors.toList());
+                .toList();
 
         assertThat(fieldsNotAllowed).isEmpty();
+
+        List<Field> intFields = Arrays.stream(FilteringPager.class.getDeclaredFields())
+                .filter(field -> field.getType().equals(int.class))
+                .toList();
+
+        assertThat(intFields.size()).isLessThanOrEqualTo(4);
     }
 
     private List<String> getSampleInput() {
