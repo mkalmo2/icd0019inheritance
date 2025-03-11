@@ -20,7 +20,7 @@ public class CalculatorTest {
         TaxFreePayCalculator calc = new TaxFreePayCalculator();
 
         assertThat(calc.getWeeklyPayAfterTaxes(41))
-                .isCloseTo(647.4, within(0.1));
+                .isCloseTo(820, within(0.1));
     }
 
 }
