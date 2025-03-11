@@ -4,7 +4,7 @@ public class PayCalculator {
 
     public static final Double OVERTIME_RATE = 1.5;
     public static final Integer HOUR_RATE = 15;
-    public static final Double TAX_RATE = 0.2;
+    public static final Double TAX_RATE = 0.22;
 
     private Double calculateWeeklyPay(Integer hoursWorked) {
         Integer straightTime = Math.min(40, hoursWorked);
