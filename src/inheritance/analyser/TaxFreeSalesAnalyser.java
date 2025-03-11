@@ -20,7 +20,7 @@ public class TaxFreeSalesAnalyser {
         throw new RuntimeException("not implemented yet");
     }
 
-    public String getIdOfItemWithLargestTotalSales() {
+    public Double getLargestTotalSalesAmountForSingleItem() {
         throw new RuntimeException("not implemented yet");
     }
 

@@ -2,9 +2,9 @@ package inheritance.analyser;
 
 import java.util.List;
 
-public class FlatTaxSalesAnalyser {
+public final class EstonianTaxSalesAnalyser {
 
-    public FlatTaxSalesAnalyser(List<SalesRecord> records) {
+    public EstonianTaxSalesAnalyser(List<SalesRecord> records) {
         throw new RuntimeException("not implemented yet");
     }
 
@@ -20,8 +20,7 @@ public class FlatTaxSalesAnalyser {
         throw new RuntimeException("not implemented yet");
     }
 
-    public String getIdOfItemWithLargestTotalSales() {
+    public Double getLargestTotalSalesAmountForSingleItem() {
         throw new RuntimeException("not implemented yet");
     }
-
 }
