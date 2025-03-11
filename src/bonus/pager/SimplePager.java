@@ -1,4 +1,4 @@
-package inheritance.pager;
+package bonus.pager;
 
 import java.util.List;
 
