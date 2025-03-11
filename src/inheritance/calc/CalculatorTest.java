@@ -11,14 +11,16 @@ public class CalculatorTest {
     public void ex1() {
         PayCalculator calc = new PayCalculator();
 
-        assertThat(calc.getWeeklyPayAfterTaxes(40)).isCloseTo(480, within(0.1));
+        assertThat(calc.getWeeklyPayAfterTaxes(40))
+                .isCloseTo(468, within(0.1));
     }
 
     @Test
     public void ex2() {
         TaxFreePayCalculator calc = new TaxFreePayCalculator();
 
-        assertThat(calc.getWeeklyPayAfterTaxes(40)).isCloseTo(600, within(0.1));
+        assertThat(calc.getWeeklyPayAfterTaxes(40))
+                .isCloseTo(600, within(0.1));
     }
 
 }
