@@ -26,7 +26,7 @@ public class SalesAnalyserTests {
     public void calculatesTotalSalesForEstonia() {
         EstonianTaxSalesAnalyser analyser = new EstonianTaxSalesAnalyser(records);
 
-         assertThat(analyser.getTotalSales()).is(closeTo(102.6));
+        assertThat(analyser.getTotalSales()).is(closeTo(102.6));
     }
 
     @Test
@@ -79,11 +79,9 @@ public class SalesAnalyserTests {
     private Condition<Double> closeTo(double expected) {
         double precision = 0.1;
 
-        return new Condition<>() {
-            @Override
-            public boolean matches(Double actual) {
-                return Math.abs(actual - expected) <= precision;
-            }
-        };
+        return new Condition<>(
+                actual -> Math.abs(actual - expected) <= precision,
+                "value close to %s (within +/- %s)", expected, precision
+        );
     }
 }
