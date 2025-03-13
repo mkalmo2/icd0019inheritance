@@ -26,14 +26,14 @@ public class SalesAnalyserTests {
     public void calculatesTotalSalesForEstonia() {
         EstonianTaxSalesAnalyser analyser = new EstonianTaxSalesAnalyser(records);
 
-         assertThat(analyser.getTotalSales()).is(closeTo(103));
+         assertThat(analyser.getTotalSales()).is(closeTo(102.6));
     }
 
     @Test
     public void calculatesTotalSalesByProductIdWithForEstonia() {
         EstonianTaxSalesAnalyser analyser = new EstonianTaxSalesAnalyser(records);
 
-        assertThat(analyser.getTotalSalesByProductId("i5")).is(closeTo(58));
+        assertThat(analyser.getTotalSalesByProductId("i5")).is(closeTo(57.7));
     }
 
     @Test
