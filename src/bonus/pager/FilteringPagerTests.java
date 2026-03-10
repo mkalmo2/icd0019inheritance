@@ -153,7 +153,13 @@ public class FilteringPagerTests {
     }
 
     @Test
+    public void filteringPagerShouldNotInheritFromOthersClasses() {
+        assertThat(FilteringPager.class.getSuperclass()).isEqualTo(Object.class);
+    }
+
+    @Test
     public void filteringPagerShouldHaveOnlyAllowedFields() {
+
         List<Field> fieldsNotAllowed = Arrays.stream(FilteringPager.class.getDeclaredFields())
                 .filter(field -> !field.getType().equals(SimplePager.class))
                 .filter(field -> !field.getType().equals(int.class))
